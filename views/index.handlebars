@@ -1,0 +1,83 @@
+<style>
+
+    #burger-row{
+        margin-top:20px;
+    }
+    form{
+        padding:50px;
+        margin-top:50px;
+        margin-bottom:50px;
+    }
+    
+</style>
+<div class="container">
+
+    <form action="" method="POST" role="form">
+        <legend>Add a Burger You Would Like to Eat</legend>
+    
+        <div class="form-group">
+            <label for="">Name of Burger</label>
+            <input type="text" class="form-control" id="name" name="name">
+        </div>
+
+        
+
+        <button type="submit" class="btn btn-primary" id="submit-btn">Submit</button>
+    </form>
+    {{!-- <hr /> --}}
+    <div class="row" id="burger-row">
+        <div class="col-md-6" id="burger-div">
+            <h2>Burgers ready to be devoured</h2>
+            <hr />
+            {{#each burger}}
+            {{#unless devoured}}
+                <div class="undevoured-burger">
+                    <h4>{{burger_name}}</h4>
+                    <button class="btn btn-sm btn-primary devour-btn" data-itemid="{{id}}">
+                        consume
+                    </button>
+                </div>
+                {{/unless}}
+            {{/each}}
+        </div>
+        <div class="col-md-6" id="burger-devoured-div">
+            <h2>Devoured Burgers</h2>
+            <hr />
+            {{#each burger}}
+            {{#if devoured}}
+                <div class="undevoured-burger">
+                    <h4>{{burger_name}}</h4>
+                    
+                </div>
+                {{/if}}
+            {{/each}}
+        </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function(){
+        $("#submit-btn").on("click", function(){
+            event.preventDefault();
+            var data = {
+                name: $("#name").val()
+            }
+            $.post("/burgers/add", data, function(data, status){
+                location.reload();
+            })
+        })
+
+        $(document).on("click", ".devour-btn", function(){
+            var data = {
+                id: $(this).attr("data-itemid")
+            }
+            $.post("/burgers/devour", data, function(data, status){
+                location.reload();
+            })
+            
+        })
+
+    })
+</script>
